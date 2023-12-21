@@ -13,6 +13,7 @@ class RetirementPrintType(Enum):
 
 class State(Enum):
     GEORGIA = 1
+    NOT_GEORGIA = 2
 
 
 class MyLife:
@@ -106,22 +107,22 @@ class MyLife:
         roth_401k_yearly_withdrawal = roth_401k_balance * (self.withdrawal_rate / 100)
         roth_ira_yearly_withdrawal = roth_ira_balance * (self.withdrawal_rate / 100)
 
-        if self.state == State.GEORGIA:
-            # social security is not taxed in GA
-            ss_taxable_income = 0
-        else:
-            provisional_income = ss.get_provisional_income(self.social_security_monthly_benefit,
-                                                           trad_401k_yearly_withdrawal, trad_ira_yearly_withdrawal)
+        provisional_income = ss.get_provisional_income(self.social_security_monthly_benefit,
+                                                       trad_401k_yearly_withdrawal, trad_ira_yearly_withdrawal)
 
-            ss_taxable_income = ss.get_social_security_taxable_income(self.social_security_monthly_benefit,
-                                                                      provisional_income)
+        ss_taxable_income = ss.get_social_security_taxable_income(self.social_security_monthly_benefit,
+                                                                  provisional_income)
 
         # Calculate Usable Pay from Traditional Retirement Accounts (401k + IRA)
         ret_federal_taxes_paid = self.retirement_federal_tax_bracket.get_taxes_paid(
             trad_401k_yearly_withdrawal + trad_ira_yearly_withdrawal + ss_taxable_income)
 
-        ret_state_taxes_paid = self.retirement_state_tax_bracket.get_taxes_paid(
-            trad_401k_yearly_withdrawal + trad_ira_yearly_withdrawal + ss_taxable_income)
+        if self.state == State.GEORGIA:
+            ret_state_taxes_paid = self.retirement_state_tax_bracket.get_taxes_paid(
+                trad_401k_yearly_withdrawal + trad_ira_yearly_withdrawal)
+        else:
+            ret_state_taxes_paid = self.retirement_state_tax_bracket.get_taxes_paid(
+                trad_401k_yearly_withdrawal + trad_ira_yearly_withdrawal + ss_taxable_income)
 
         after_tax_pay = trad_401k_yearly_withdrawal + trad_ira_yearly_withdrawal + (self.social_security_monthly_benefit * 12) - ret_federal_taxes_paid - ret_state_taxes_paid
 

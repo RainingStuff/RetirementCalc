@@ -67,6 +67,7 @@ if __name__ == '__main__':
     yearly_brokerage_contribution = 0
     social_security_monthly_benefit = 2390
     state = retirement.State.GEORGIA
+    #  state = retirement.State.NOT_GEORGIA
 
     print('${:,.2f}'.format(gross_salary) + ", Working in GA, contributing " + '${:,.2f}'.format(
         yearly_trad_401k_contribution) + " to Trad 401k, and Retiring in GA with a monthly SS income of " + '${:,.2f}'.format(
@@ -96,63 +97,9 @@ if __name__ == '__main__':
 
     my_life_example_2.print_my_life(retirement.RetirementPrintType.PRINT_TAKE_HOME)
 
+    print(" ")
+    print_historical_effective_federal_tax_rate = False  # True
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # local_gross_salary = 94500
-    # local_401k_percent = 0
-
-    # get_paycheck_income(local_gross_salary, fed.fed_2023, state.state_2023, local_401k_percent)
-    # get_yearly_earned_income(local_gross_salary, fed.fed_2023, state.state_2023, local_401k_percent)
-    # get_yearly_ordinary_income(89264.70, fed.fed_2023, state.state_2023)
-    # get_yearly_ordinary_income(80268.17, fed.fed_2023, state.state_2023)
-
-    # for tax in fed.federal_tax_bracket_list:
-        # tax.print_effective_tax_info(inflation.get_inflation_adjusted_salary(89264.70, tax.year))
-        # tax.print_effective_tax_info(inflation.get_inflation_adjusted_salary(3411677.78, tax.year))
-
-    # fed.fed_2023.print_tax_info(gross_salary)
-    # state.state_2023.print_tax_info(gross_salary)
-    # fed.fed_2023.print_tax_info(gross_salary)
-    # fed.fed_2023.print_tax_info(93500)
-    # ltcg.ltcg_2023.print_tax_info(64611.16)
-
-    # print_monthly_compound_interest(5, 100, 100, 10)
-    # print_yearly_compound_interest(5, 100, 100, 10)
+    if print_historical_effective_federal_tax_rate:
+        for tax in fed.federal_tax_bracket_list:
+            tax.print_effective_tax_info(inflation.get_inflation_adjusted_salary(gross_salary, tax.year))
